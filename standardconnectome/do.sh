@@ -31,7 +31,7 @@ for ((i = 1 ; i < 51 ; i++)); do
 
     # compile options
     o=" --opd --loopcheck --forcedir" 
-    o=" $o -P 1 --sampvox=1 --randfib=1 --network"
+    o=" $o -P 10000 --sampvox=1 --randfib=1 --network"
     o=" $o --xfm=$xfm --invxfm=$invxfm"
     o=" $o --samples=$bpxdir/merged --mask=$bpxdir/nodif_brain_mask"
     o=" $o --seed=$seeds --ompl -V 1 --dir=$out_folder/subjects/$subj"
