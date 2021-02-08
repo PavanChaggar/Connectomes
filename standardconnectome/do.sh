@@ -1,7 +1,7 @@
 #!/bin/bash
 
 hcp_folder=/vols/Scratch/HCP
-out_folder=/home/fs0/exet5033/connectome/standardconnectome/
+out_folder=/home/fs0/exet5033/Connectomes/standardconnectome
 filename=/vols/Scratch/HCP/Diffusion/Q1200/all_subjects
 
 rm -f command.txt
@@ -20,7 +20,7 @@ for ((i = 1 ; i < 2 ; i++)); do
     fi
 
     # create text file with list of seed masks
-    echo /home/fs0/exet5033/connectome/rois/roi???.nii.gz > $out_folder/roilist
+    echo /home/fs0/exet5033/Connectomes/standardconnectome/rois/roi???.nii.gz > $out_folder/roilist
     seeds=$out_folder/roilist
 
 
