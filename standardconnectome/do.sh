@@ -6,7 +6,7 @@ filename=/vols/Scratch/HCP/Diffusion/Q1200/all_subjects
 
 rm -f command.txt
 
-for ((i = 1 ; i < 50 ; i++)); do
+for ((i = 1 ; i < 51 ; i++)); do
 	subj=$(sed -n $i'p' $filename)
 
     #100307  119025  137431  155635  175136  195445  214019  341834  486759  599671  744553  878877
