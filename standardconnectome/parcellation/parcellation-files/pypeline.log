@@ -1,0 +1,413 @@
+210129-13:38:23,274 nipype.workflow INFO:
+	 Generated workflow graph: /output_dir/nipype/sub-01/anatomical_pipeline/graph.svg (graph2use=colored, simple_form=True).
+210129-13:38:23,275 nipype.interface INFO:
+	 **** Processing ****
+210129-13:38:23,414 nipype.workflow INFO:
+	 Workflow anatomical_pipeline settings: ['check', 'execution', 'logging', 'monitoring']
+210129-13:38:23,428 nipype.workflow INFO:
+	 Running serially.
+210129-13:38:23,429 nipype.workflow INFO:
+	 [Node] Setting-up "anatomical_pipeline.datasource" in "/output_dir/nipype/sub-01/anatomical_pipeline/datasource".
+210129-13:38:23,436 nipype.workflow INFO:
+	 [Node] Running "datasource" ("nipype.interfaces.io.DataGrabber")
+210129-13:38:23,445 nipype.workflow INFO:
+	 [Node] Finished "anatomical_pipeline.datasource".
+210129-13:38:23,446 nipype.workflow INFO:
+	 [Node] Setting-up "anatomical_pipeline.segmentation_stage.mgz_convert" in "/output_dir/nipype/sub-01/anatomical_pipeline/segmentation_stage/mgz_convert".
+210129-13:38:23,450 nipype.workflow INFO:
+	 [Node] Outdated cache found for "anatomical_pipeline.segmentation_stage.mgz_convert".
+210129-13:38:23,460 nipype.workflow INFO:
+	 [Node] Running "mgz_convert" ("nipype.interfaces.freesurfer.preprocess.MRIConvert"), a CommandLine Interface with command:
+mri_convert --out_type mgz --resample_type interpolate -voxsize 1.000000 1.000000 1.000000 --input_volume /output_dir/cmp/sub-01/anat/sub-01_desc-cmp_T1w.nii.gz --output_volume T1.mgz
+210129-13:38:23,941 nipype.interface INFO:
+	 stdout 2021-01-29T13:38:23.940988:mri_convert.bin --out_type mgz --resample_type interpolate -voxsize 1.000000 1.000000 1.000000 --input_volume /output_dir/cmp/sub-01/anat/sub-01_desc-cmp_T1w.nii.gz --output_volume T1.mgz 
+210129-13:38:25,649 nipype.interface INFO:
+	 stdout 2021-01-29T13:38:25.649319:$Id: mri_convert.c,v 1.226 2016/02/26 16:15:24 mreuter Exp $
+210129-13:38:25,649 nipype.interface INFO:
+	 stdout 2021-01-29T13:38:25.649319:reading from /output_dir/cmp/sub-01/anat/sub-01_desc-cmp_T1w.nii.gz...
+210129-13:38:25,650 nipype.interface INFO:
+	 stdout 2021-01-29T13:38:25.649319:WARNING: hdr.dim[4] = 0 (nframes), setting to 1
+210129-13:38:25,650 nipype.interface INFO:
+	 stdout 2021-01-29T13:38:25.649319:niiRead(): NIFTI_UNITS_UNKNOWN, assuming mm
+210129-13:38:25,650 nipype.interface INFO:
+	 stdout 2021-01-29T13:38:25.649319:TR=0.00, TE=0.00, TI=0.00, flip angle=0.00
+210129-13:38:25,650 nipype.interface INFO:
+	 stdout 2021-01-29T13:38:25.649319:i_ras = (1, 0, 0)
+210129-13:38:25,650 nipype.interface INFO:
+	 stdout 2021-01-29T13:38:25.649319:j_ras = (0, 1, 0)
+210129-13:38:25,650 nipype.interface INFO:
+	 stdout 2021-01-29T13:38:25.649319:k_ras = (0, 0, 1)
+210129-13:38:25,650 nipype.interface INFO:
+	 stdout 2021-01-29T13:38:25.649319:writing to T1.mgz...
+210129-13:38:25,708 nipype.workflow INFO:
+	 [Node] Finished "anatomical_pipeline.segmentation_stage.mgz_convert".
+210129-13:38:25,709 nipype.workflow INFO:
+	 [Node] Setting-up "anatomical_pipeline.segmentation_stage.copy_orig" in "/output_dir/nipype/sub-01/anatomical_pipeline/segmentation_stage/copy_orig".
+210129-13:38:25,711 nipype.workflow INFO:
+	 [Node] Outdated cache found for "anatomical_pipeline.segmentation_stage.copy_orig".
+210129-13:38:25,716 nipype.workflow INFO:
+	 [Node] Running "copy_orig" ("nipype.interfaces.utility.base.Rename")
+210129-13:38:25,726 nipype.workflow INFO:
+	 [Node] Finished "anatomical_pipeline.segmentation_stage.copy_orig".
+210129-13:38:25,727 nipype.workflow INFO:
+	 [Node] Setting-up "anatomical_pipeline.segmentation_stage.reconall" in "/output_dir/nipype/sub-01/anatomical_pipeline/segmentation_stage/reconall".
+210129-13:38:25,752 nipype.workflow INFO:
+	 [Node] Cached "anatomical_pipeline.segmentation_stage.reconall" - collecting precomputed outputs
+210129-13:38:25,752 nipype.workflow INFO:
+	 [Node] "anatomical_pipeline.segmentation_stage.reconall" found cached.
+210129-13:38:25,753 nipype.workflow INFO:
+	 [Node] Setting-up "anatomical_pipeline.parcellation_stage.Lausanne2018_parcellation" in "/output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/Lausanne2018_parcellation".
+210129-13:38:25,768 nipype.workflow INFO:
+	 [Node] Cached "anatomical_pipeline.parcellation_stage.Lausanne2018_parcellation" - collecting precomputed outputs
+210129-13:38:25,768 nipype.workflow INFO:
+	 [Node] "anatomical_pipeline.parcellation_stage.Lausanne2018_parcellation" found cached.
+210129-13:38:25,769 nipype.workflow INFO:
+	 [Node] Setting-up "anatomical_pipeline.parcellation_stage.parcCombiner" in "/output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner".
+210129-13:38:25,786 nipype.workflow INFO:
+	 [Node] Outdated cache found for "anatomical_pipeline.parcellation_stage.parcCombiner".
+210129-13:38:25,792 nipype.workflow INFO:
+	 [Node] Running "parcCombiner" ("cmtklib.parcellation.CombineParcellations")
+210129-13:38:25,793 nipype.interface INFO:
+	 ------------------------------------------------------------
+210129-13:38:25,793 nipype.interface INFO:
+	 Combination of Lausanne2008 parcellation with new structures
+210129-13:38:25,793 nipype.interface INFO:
+	 ------------------------------------------------------------
+210129-13:38:25,793 nipype.interface INFO:
+	   > Freesurfer subject directory: /output_dir/freesurfer/sub-01
+210129-13:38:25,793 nipype.interface INFO:
+	 [93m  Subfields image (Left hemisphere) not provided[0m
+210129-13:38:25,793 nipype.interface INFO:
+	 [93m  Subfields image (Right hemisphere) not provided[0m
+210129-13:38:25,793 nipype.interface INFO:
+	 [93m  Thalamic nuclei image not provided[0m
+210129-13:38:25,793 nipype.interface INFO:
+	 [93m  Brain stem image not provided[0m
+210129-13:38:25,794 nipype.interface INFO:
+	   > Create ventricule image
+210129-13:38:25,998 nipype.interface INFO:
+	     ... Image saved to /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ventricle3.nii.gz
+210129-13:38:26,208 nipype.interface INFO:
+	   > Dilate the ventricule image
+210129-13:38:26,208 nipype.interface INFO:
+	     ... Command: fslmaths /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ventricle3.nii.gz -kernel sphere 5 -dilD /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ventricle3_dil.nii.gz
+210129-13:41:42,714 nipype.interface INFO:
+	   > Create colorLUT file as /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale4_FreeSurferColorLUT.txt
+210129-13:41:42,715 nipype.interface INFO:
+	   > Create graphML_file as /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale4.graphml
+210129-13:41:42,959 nipype.interface INFO:
+	   > Load rh.lausanne2008.scale4.annot
+210129-13:41:43,468 nipype.interface INFO:
+	   > Load lh.lausanne2008.scale4.annot
+210129-13:41:43,921 nipype.interface INFO:
+	   > Save output image to /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale4_final.nii.gz
+210129-13:41:44,162 nipype.interface INFO:
+	   > Create colorLUT file as /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale5_FreeSurferColorLUT.txt
+210129-13:41:44,163 nipype.interface INFO:
+	   > Create graphML_file as /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale5.graphml
+210129-13:41:44,408 nipype.interface INFO:
+	   > Load rh.lausanne2008.scale5.annot
+210129-13:41:44,957 nipype.interface INFO:
+	   > Load lh.lausanne2008.scale5.annot
+210129-13:41:45,375 nipype.interface INFO:
+	   > Save output image to /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale5_final.nii.gz
+210129-13:41:45,623 nipype.interface INFO:
+	   > Create colorLUT file as /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale1_FreeSurferColorLUT.txt
+210129-13:41:45,623 nipype.interface INFO:
+	   > Create graphML_file as /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale1.graphml
+210129-13:41:45,883 nipype.interface INFO:
+	   > Load rh.lausanne2008.scale1.annot
+210129-13:41:46,371 nipype.interface INFO:
+	   > Load lh.lausanne2008.scale1.annot
+210129-13:41:47,138 nipype.interface INFO:
+	   > Save output image to /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale1_final.nii.gz
+210129-13:41:47,354 nipype.interface INFO:
+	   > Create colorLUT file as /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale2_FreeSurferColorLUT.txt
+210129-13:41:47,354 nipype.interface INFO:
+	   > Create graphML_file as /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale2.graphml
+210129-13:41:47,592 nipype.interface INFO:
+	   > Load rh.lausanne2008.scale2.annot
+210129-13:41:48,132 nipype.interface INFO:
+	   > Load lh.lausanne2008.scale2.annot
+210129-13:41:48,580 nipype.interface INFO:
+	   > Save output image to /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale2_final.nii.gz
+210129-13:41:48,807 nipype.interface INFO:
+	   > Create colorLUT file as /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale3_FreeSurferColorLUT.txt
+210129-13:41:48,807 nipype.interface INFO:
+	   > Create graphML_file as /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale3.graphml
+210129-13:41:49,29 nipype.interface INFO:
+	   > Load rh.lausanne2008.scale3.annot
+210129-13:41:49,491 nipype.interface INFO:
+	   > Load lh.lausanne2008.scale3.annot
+210129-13:41:49,951 nipype.interface INFO:
+	   > Save output image to /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale3_final.nii.gz
+210129-13:41:50,172 nipype.interface INFO:
+	     ... Copy aparc+aseg to /output_dir/freesurfer/sub-01/tmp/aparc+aseg.mgz
+210129-13:41:50,173 nipype.interface INFO:
+	     ... Transform to native space
+210129-13:41:50,174 nipype.interface INFO:
+	         Command: mri_vol2vol --mov "/output_dir/freesurfer/sub-01/mri/aparc+aseg.mgz" --targ "/output_dir/freesurfer/sub-01/mri/orig/001.mgz" --regheader --o "/output_dir/freesurfer/sub-01/tmp/aparc+aseg.native.nii.gz" --no-save-reg --interp nearest
+210129-13:41:52,274 nipype.interface INFO:
+	   > Correct Freesurfer generated aparc+aseg.mgz...
+210129-13:41:52,274 nipype.interface INFO:
+	     ... Save relabeled image to /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/aparc+aseg.Lausanne2018.native.nii.gz
+210129-13:41:52,420 nipype.workflow INFO:
+	 [Node] Finished "anatomical_pipeline.parcellation_stage.parcCombiner".
+210129-13:41:52,423 nipype.workflow INFO:
+	 [Node] Setting-up "anatomical_pipeline.parcellation_stage.computeROIVolumetry" in "/output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/computeROIVolumetry".
+210129-13:41:52,429 nipype.workflow INFO:
+	 [Node] Outdated cache found for "anatomical_pipeline.parcellation_stage.computeROIVolumetry".
+210129-13:41:52,436 nipype.workflow INFO:
+	 [Node] Running "computeROIVolumetry" ("cmtklib.parcellation.ComputeParcellationRoiVolumes")
+210129-13:41:52,437 nipype.interface INFO:
+	 -------------------------------------------------------
+210129-13:41:52,437 nipype.interface INFO:
+	 Processing Lausanne2018 parcellation - scale4
+210129-13:41:52,437 nipype.interface INFO:
+	 -------------------------------------------------------
+210129-13:41:52,437 nipype.interface INFO:
+	   > Load /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale4_final.nii.gz...
+210129-13:41:52,494 nipype.interface INFO:
+	     ... Voxel volume = /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale4_final.nii.gz mm3
+210129-13:41:52,494 nipype.interface INFO:
+	   > Create Volumetry TSV file as /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/computeROIVolumetry/roi_stats_scale4.tsv
+210129-13:41:52,494 nipype.interface INFO:
+	   > Load /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale4.graphml...
+210129-13:41:52,510 nipype.interface INFO:
+	   > Processing parcels...
+210129-13:41:52,510 nipype.interface INFO:
+	    0%
+210129-13:41:53,8 nipype.interface INFO:
+	   10%
+210129-13:41:53,530 nipype.interface INFO:
+	   20%
+210129-13:41:54,48 nipype.interface INFO:
+	   30%
+210129-13:41:54,579 nipype.interface INFO:
+	   40%
+210129-13:41:55,100 nipype.interface INFO:
+	   50%
+210129-13:41:55,614 nipype.interface INFO:
+	   60%
+210129-13:41:56,135 nipype.interface INFO:
+	   70%
+210129-13:41:56,651 nipype.interface INFO:
+	   80%
+210129-13:41:57,173 nipype.interface INFO:
+	   90%
+210129-13:41:57,692 nipype.interface INFO:
+	  100%
+210129-13:41:57,714 nipype.interface INFO:
+	 -------------------------------------------------------
+210129-13:41:57,715 nipype.interface INFO:
+	 Processing Lausanne2018 parcellation - scale5
+210129-13:41:57,715 nipype.interface INFO:
+	 -------------------------------------------------------
+210129-13:41:57,715 nipype.interface INFO:
+	   > Load /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale5_final.nii.gz...
+210129-13:41:57,764 nipype.interface INFO:
+	     ... Voxel volume = /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale5_final.nii.gz mm3
+210129-13:41:57,765 nipype.interface INFO:
+	   > Create Volumetry TSV file as /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/computeROIVolumetry/roi_stats_scale5.tsv
+210129-13:41:57,765 nipype.interface INFO:
+	   > Load /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale5.graphml...
+210129-13:41:57,799 nipype.interface INFO:
+	   > Processing parcels...
+210129-13:41:57,799 nipype.interface INFO:
+	    0%
+210129-13:41:58,897 nipype.interface INFO:
+	   10%
+210129-13:42:00,37 nipype.interface INFO:
+	   20%
+210129-13:42:01,190 nipype.interface INFO:
+	   30%
+210129-13:42:02,325 nipype.interface INFO:
+	   40%
+210129-13:42:03,482 nipype.interface INFO:
+	   50%
+210129-13:42:04,625 nipype.interface INFO:
+	   60%
+210129-13:42:05,759 nipype.interface INFO:
+	   70%
+210129-13:42:06,916 nipype.interface INFO:
+	   80%
+210129-13:42:08,58 nipype.interface INFO:
+	   90%
+210129-13:42:09,201 nipype.interface INFO:
+	  100%
+210129-13:42:09,259 nipype.interface INFO:
+	 -------------------------------------------------------
+210129-13:42:09,259 nipype.interface INFO:
+	 Processing Lausanne2018 parcellation - scale1
+210129-13:42:09,259 nipype.interface INFO:
+	 -------------------------------------------------------
+210129-13:42:09,259 nipype.interface INFO:
+	   > Load /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale1_final.nii.gz...
+210129-13:42:09,301 nipype.interface INFO:
+	     ... Voxel volume = /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale1_final.nii.gz mm3
+210129-13:42:09,301 nipype.interface INFO:
+	   > Create Volumetry TSV file as /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/computeROIVolumetry/roi_stats_scale1.tsv
+210129-13:42:09,301 nipype.interface INFO:
+	   > Load /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale1.graphml...
+210129-13:42:09,305 nipype.interface INFO:
+	   > Processing parcels...
+210129-13:42:09,305 nipype.interface INFO:
+	    0%
+210129-13:42:09,394 nipype.interface INFO:
+	   10%
+210129-13:42:09,500 nipype.interface INFO:
+	   20%
+210129-13:42:09,590 nipype.interface INFO:
+	   30%
+210129-13:42:09,679 nipype.interface INFO:
+	   40%
+210129-13:42:09,875 nipype.interface INFO:
+	   60%
+210129-13:42:09,967 nipype.interface INFO:
+	   70%
+210129-13:42:10,58 nipype.interface INFO:
+	   80%
+210129-13:42:10,161 nipype.interface INFO:
+	   90%
+210129-13:42:10,252 nipype.interface INFO:
+	 -------------------------------------------------------
+210129-13:42:10,252 nipype.interface INFO:
+	 Processing Lausanne2018 parcellation - scale2
+210129-13:42:10,252 nipype.interface INFO:
+	 -------------------------------------------------------
+210129-13:42:10,252 nipype.interface INFO:
+	   > Load /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale2_final.nii.gz...
+210129-13:42:10,293 nipype.interface INFO:
+	     ... Voxel volume = /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale2_final.nii.gz mm3
+210129-13:42:10,293 nipype.interface INFO:
+	   > Create Volumetry TSV file as /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/computeROIVolumetry/roi_stats_scale2.tsv
+210129-13:42:10,294 nipype.interface INFO:
+	   > Load /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale2.graphml...
+210129-13:42:10,299 nipype.interface INFO:
+	   > Processing parcels...
+210129-13:42:10,299 nipype.interface INFO:
+	    0%
+210129-13:42:10,451 nipype.interface INFO:
+	   10%
+210129-13:42:10,598 nipype.interface INFO:
+	   20%
+210129-13:42:10,747 nipype.interface INFO:
+	   30%
+210129-13:42:10,884 nipype.interface INFO:
+	   40%
+210129-13:42:11,30 nipype.interface INFO:
+	   50%
+210129-13:42:11,179 nipype.interface INFO:
+	   60%
+210129-13:42:11,325 nipype.interface INFO:
+	   70%
+210129-13:42:11,474 nipype.interface INFO:
+	   80%
+210129-13:42:11,619 nipype.interface INFO:
+	   90%
+210129-13:42:11,766 nipype.interface INFO:
+	 -------------------------------------------------------
+210129-13:42:11,766 nipype.interface INFO:
+	 Processing Lausanne2018 parcellation - scale3
+210129-13:42:11,766 nipype.interface INFO:
+	 -------------------------------------------------------
+210129-13:42:11,766 nipype.interface INFO:
+	   > Load /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale3_final.nii.gz...
+210129-13:42:11,820 nipype.interface INFO:
+	     ... Voxel volume = /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale3_final.nii.gz mm3
+210129-13:42:11,820 nipype.interface INFO:
+	   > Create Volumetry TSV file as /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/computeROIVolumetry/roi_stats_scale3.tsv
+210129-13:42:11,820 nipype.interface INFO:
+	   > Load /output_dir/nipype/sub-01/anatomical_pipeline/parcellation_stage/parcCombiner/ROIv_HR_th_scale3.graphml...
+210129-13:42:11,828 nipype.interface INFO:
+	   > Processing parcels...
+210129-13:42:11,828 nipype.interface INFO:
+	    0%
+210129-13:42:12,75 nipype.interface INFO:
+	   10%
+210129-13:42:12,346 nipype.interface INFO:
+	   20%
+210129-13:42:12,608 nipype.interface INFO:
+	   30%
+210129-13:42:12,869 nipype.interface INFO:
+	   40%
+210129-13:42:13,127 nipype.interface INFO:
+	   50%
+210129-13:42:13,385 nipype.interface INFO:
+	   60%
+210129-13:42:13,646 nipype.interface INFO:
+	   70%
+210129-13:42:13,907 nipype.interface INFO:
+	   80%
+210129-13:42:14,169 nipype.interface INFO:
+	   90%
+210129-13:42:14,425 nipype.interface INFO:
+	  100%
+210129-13:42:14,440 nipype.interface INFO:
+	   [Done]
+210129-13:42:14,452 nipype.workflow INFO:
+	 [Node] Finished "anatomical_pipeline.parcellation_stage.computeROIVolumetry".
+210129-13:42:14,453 nipype.workflow INFO:
+	 [Node] Setting-up "anatomical_pipeline.anatomical_sinker" in "/output_dir/nipype/sub-01/anatomical_pipeline/anatomical_sinker".
+210129-13:42:14,482 nipype.workflow INFO:
+	 [Node] Outdated cache found for "anatomical_pipeline.anatomical_sinker".
+210129-13:42:14,525 nipype.workflow INFO:
+	 [Node] Running "anatomical_sinker" ("nipype.interfaces.io.DataSink")
+210129-13:42:14,526 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/T1.nii.gz -> /output_dir/cmp/sub-01/anat/sub-01_desc-head_T1w.nii.gz
+210129-13:42:14,526 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/fsmask_1mm.nii.gz -> /output_dir/cmp/sub-01/anat/sub-01_label-WM_dseg.nii.gz
+210129-13:42:14,527 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/brain_mask.nii.gz -> /output_dir/cmp/sub-01/anat/sub-01_desc-brain_mask.nii.gz
+210129-13:42:14,527 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/roi_stats_scale4.tsv -> /output_dir/cmp/sub-01/anat/sub-01_label-L2018_desc-scale4_stats.tsv
+210129-13:42:14,527 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/roi_stats_scale5.tsv -> /output_dir/cmp/sub-01/anat/sub-01_label-L2018_desc-scale5_stats.tsv
+210129-13:42:14,528 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/roi_stats_scale1.tsv -> /output_dir/cmp/sub-01/anat/sub-01_label-L2018_desc-scale1_stats.tsv
+210129-13:42:14,528 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/roi_stats_scale2.tsv -> /output_dir/cmp/sub-01/anat/sub-01_label-L2018_desc-scale2_stats.tsv
+210129-13:42:14,528 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/roi_stats_scale3.tsv -> /output_dir/cmp/sub-01/anat/sub-01_label-L2018_desc-scale3_stats.tsv
+210129-13:42:14,528 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/ROIv_HR_th_scale4_FreeSurferColorLUT.txt -> /output_dir/cmp/sub-01/anat/sub-01_label-L2018_desc-scale4_atlas_FreeSurferColorLUT.txt
+210129-13:42:14,529 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/ROIv_HR_th_scale5_FreeSurferColorLUT.txt -> /output_dir/cmp/sub-01/anat/sub-01_label-L2018_desc-scale5_atlas_FreeSurferColorLUT.txt
+210129-13:42:14,529 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/ROIv_HR_th_scale1_FreeSurferColorLUT.txt -> /output_dir/cmp/sub-01/anat/sub-01_label-L2018_desc-scale1_atlas_FreeSurferColorLUT.txt
+210129-13:42:14,530 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/ROIv_HR_th_scale2_FreeSurferColorLUT.txt -> /output_dir/cmp/sub-01/anat/sub-01_label-L2018_desc-scale2_atlas_FreeSurferColorLUT.txt
+210129-13:42:14,530 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/ROIv_HR_th_scale3_FreeSurferColorLUT.txt -> /output_dir/cmp/sub-01/anat/sub-01_label-L2018_desc-scale3_atlas_FreeSurferColorLUT.txt
+210129-13:42:14,530 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/ROIv_HR_th_scale4.graphml -> /output_dir/cmp/sub-01/anat/sub-01_label-L2018_desc-scale4_atlas.graphml
+210129-13:42:14,531 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/ROIv_HR_th_scale5.graphml -> /output_dir/cmp/sub-01/anat/sub-01_label-L2018_desc-scale5_atlas.graphml
+210129-13:42:14,531 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/ROIv_HR_th_scale1.graphml -> /output_dir/cmp/sub-01/anat/sub-01_label-L2018_desc-scale1_atlas.graphml
+210129-13:42:14,531 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/ROIv_HR_th_scale2.graphml -> /output_dir/cmp/sub-01/anat/sub-01_label-L2018_desc-scale2_atlas.graphml
+210129-13:42:14,532 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/ROIv_HR_th_scale3.graphml -> /output_dir/cmp/sub-01/anat/sub-01_label-L2018_desc-scale3_atlas.graphml
+210129-13:42:14,532 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/T1w_class-GM.nii.gz -> /output_dir/cmp/sub-01/anat/sub-01_label-GM_dseg.nii.gz
+210129-13:42:14,532 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/brain.nii.gz -> /output_dir/cmp/sub-01/anat/sub-01_desc-brain_T1w.nii.gz
+210129-13:42:14,533 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/ROIv_HR_th_scale4_final.nii.gz -> /output_dir/cmp/sub-01/anat/sub-01_label-L2018_desc-scale4_atlas.nii.gz
+210129-13:42:14,533 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/ROIv_HR_th_scale5_final.nii.gz -> /output_dir/cmp/sub-01/anat/sub-01_label-L2018_desc-scale5_atlas.nii.gz
+210129-13:42:14,533 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/ROIv_HR_th_scale1_final.nii.gz -> /output_dir/cmp/sub-01/anat/sub-01_label-L2018_desc-scale1_atlas.nii.gz
+210129-13:42:14,533 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/ROIv_HR_th_scale2_final.nii.gz -> /output_dir/cmp/sub-01/anat/sub-01_label-L2018_desc-scale2_atlas.nii.gz
+210129-13:42:14,534 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/ROIv_HR_th_scale3_final.nii.gz -> /output_dir/cmp/sub-01/anat/sub-01_label-L2018_desc-scale3_atlas.nii.gz
+210129-13:42:14,534 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/aseg.nii.gz -> /output_dir/cmp/sub-01/anat/sub-01_desc-aseg_dseg.nii.gz
+210129-13:42:14,534 nipype.interface INFO:
+	 sub: /output_dir/cmp/sub-01/anat/aparc+aseg.Lausanne2018.native.nii.gz -> /output_dir/cmp/sub-01/anat/sub-01_desc-aparcaseg_dseg.nii.gz
+210129-13:42:14,551 nipype.workflow INFO:
+	 [Node] Finished "anatomical_pipeline.anatomical_sinker".
+210129-13:42:14,551 nipype.interface INFO:
+	 **** Processing finished ****
