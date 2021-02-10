@@ -6,9 +6,9 @@ and HCP data.
 To locate the individual subject data, navigate to `subjects`. 
 
 Inside each of the subject directories, there exist: 
-* fdt_network_matrix.
-* fdt_network_matrix_lengths.
-* fdt_network_matrix.nii.gz. 
+* fdt_network_matrix
+* fdt_network_matrix_lengths
+* fdt_network_matrix.nii.gz
 * fdt_network_matrix_lengths.nii.gz
 * NumSeeds_of_ROIs 
 * probtrackx.log
