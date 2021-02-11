@@ -1,0 +1,5 @@
+docker run -m 10g --cpus 4 -it --rm -v /home/zcxp/bin/msbpv1p1/data/mni-icbm152:/bids_dir \
+-v /home/zcxp/bin/msbpv1p1/data/mni-icbm152/derivatives:/output_dir \
+-v /home/zcxp/bin/msbpv1p1/license.txt:/bids_dir/code/license.txt \
+sebastientourbier/multiscalebrainparcellator:v1.1.1 /bids_dir /output_dir \
+participant --participant_label 01 --isotropic_resolution 1.0 --hippocampal_subfields --multiproc_number_of_cores 4 --fs_number_of_cores 4 --skip_bids_validator
