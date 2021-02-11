@@ -5,8 +5,8 @@ import os
 
 # Split atlas into individual rois
 
-dirname  = '/home/fs0/exet5033/connectome/standardconnectome'
-filename = os.path.join(dirname,'parcellation/parcellation-files/sub-01_label-L2018_desc-scale1_atlas.nii.gz')
+dirname  = '/home/fs0/exet5033/Connectomes/hippsubfields_connectome'
+filename = os.path.join(dirname,'hippoc-subfields/parcellation-files/sub-01_label-L2018_desc-scale1_atlas.nii.gz')
 atlas    = Image(filename)
 ref      = Image('/opt/fmrib/fsl/data/standard/MNI152_T1_2mm.nii.gz')
 
