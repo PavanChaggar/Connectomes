@@ -1,7 +1,7 @@
 # Hippocampal Subfield Connectome
 
 This directory contains the connectomes generated using scale1 Lausanne atlas 
-*with hippocampal subfields* and HCP data.  
+**with hippocampal subfields** and HCP data.  
 
 To locate the individual subject data, navigate to `subjects`. 
 
