@@ -5,14 +5,16 @@ import os
 
 # Split atlas into individual rois
 
-dirname  = '/home/fs0/exet5033/Connectomes/hippsubfields_connectome'
-filename = os.path.join(dirname,'hippoc-subfields/parcellation-files/sub-01_label-L2018_desc-scale1_atlas.nii.gz')
+dirname  = '/home/fs0/exet5033/Connectomes/full_connectome'
+scale = 1
+filename = os.path.join(dirname,'parcellation/parcellation-files/sub-01_label-L2018_desc-scale%d_atlas.nii.gz' %scale)
+out_dir = os.path.join(dirname, 'scale%d/rois' %scale)
 atlas    = Image(filename)
 ref      = Image('/opt/fmrib/fsl/data/standard/MNI152_T1_2mm.nii.gz')
 
 
-if not os.path.exists(os.path.join(dirname,'rois')):
-    os.makedirs(os.path.join(dirname,'rois'))
+if not os.path.exists(out_dir):
+    os.makedirs(out_dir)
 
 
 for i in np.unique(atlas.data):    
@@ -23,5 +25,5 @@ for i in np.unique(atlas.data):
         img = Image(x,xform=atlas.voxToWorldMat)
         data,xform = resample.resampleToReference(img,ref,order=0)
         img = Image(data,xform=xform)
-        img.save(os.path.join(dirname,'rois',f'roi{int(i):03d}.nii.gz'))
+        img.save(os.path.join(out_dir,f'roi{int(i):03d}.nii.gz'))
         
