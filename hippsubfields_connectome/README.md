@@ -14,7 +14,7 @@ Inside each of the subject directories, there exist:
 * probtrackx.log
 * waytotal 
 
-Of particular importaance are fdt_network_matrix and fdt_network_matrix_lengths
+Of particular importance are fdt_network_matrix and fdt_network_matrix_lengths
 which each contain an adjacency matricies weighted by number of connections and 
 connection length, respectively. Their corresponding nifti images are provided 
 in compressed form. 

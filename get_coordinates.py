@@ -3,7 +3,7 @@ from nilearn.plotting import find_parcellation_cut_coords
 import numpy as np
 
 # SET PATH TO PARCELLATIO NIFTI IMAGE 
-root_path='/home/fs0/exet5033/Connectomes/hippsubfields_connectome/parcellation/parcellation-files/'
+root_path='/home/fs0/exet5033/Connectomes/full_connectome/parcellation/parcellation-files/'
 
 for i in range(1,6):
     parcellation_path = root_path + 'sub-01_label-L2018_desc-scale%d_atlas.nii.gz' %i
