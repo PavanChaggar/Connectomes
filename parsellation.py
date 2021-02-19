@@ -30,6 +30,7 @@ import sys
 from os import path
 from os import walk
 import numpy as np
+import matplotlib.pyplot as plt
 
 # ----------------------------------------------------------
 # implements a node that can generate its own xml tag
@@ -429,7 +430,11 @@ class ParcellationNodes(NodeList):
 		elif not self.xmlgen:
 			self.generatexmltags()
 
-		for k in self.nodes.keys():
+		# we write the nodes out in order
+		keyslist = list(self.nodes.keys())
+		keyslist.sort()
+
+		for k in keyslist:
 			xmlstr += (self.nodes[k]).getxml()
 
 		return xmlstr
@@ -442,7 +447,7 @@ class ParcellationEdges(EdgeList):
 	# this constructor expects a ParcellationNodes
 	# object to be passed to it.  The edges are
 	# assumed to be undirected
-	def __init__(self,parcnodes):
+	def __init__(self, parcnodes):
 		super().__init__()
 
 		# get the number of nodes in the parcellation
@@ -468,7 +473,7 @@ class ParcellationEdges(EdgeList):
 
 	# an internal helper function used to check
 	# the existence of a given file
-	def checkexist(self,pathto):
+	def checkexist(self, pathto):
 		retv = False
 
 		if path.isfile(csvfile) == True:
@@ -504,7 +509,7 @@ class ParcellationEdges(EdgeList):
 		if not self.fdtnetworkmatrix and self.checkexist(pathto):
 			# fill in the fiber number matrix (connectivity) from the raw file
 
-			f = open(pathto,"r")
+			f = open(pathto, "r")
 			line = f.readline()
 			rowndx = 0
 
@@ -514,7 +519,7 @@ class ParcellationEdges(EdgeList):
 				# between the ROIs.  There are a number of entries, in each line, equal
 				# to the number of ROIs; there are the same number of lines in each file
 				# (square matrix of size nROI x nROI).  The file is double-space delimited
-				entries = self.parsematline(line,self.matsz)
+				entries = self.parsematline(line, self.matsz)
 
 				for colndx in range(self.matsz):
 					# update the internal matrix
@@ -526,6 +531,9 @@ class ParcellationEdges(EdgeList):
 			f.close()
 			self.fdtnetworkmatrix = True
 			self.sym = False # system matrices are no longer symmetric
+
+			# uncomment to show a visual of the current numbers matrix
+			# plt.imshow(self.matnumbers)
 		else:
 			print("Cannot load matrix numbers")
 			print("Provide a valid file or call reset(..) before proceeding")
@@ -559,6 +567,9 @@ class ParcellationEdges(EdgeList):
 			f.close()
 			self.fdtnetworklengths = True
 			self.sym = False  # system matrices are no longer symmetric
+
+			# uncomment to see a visual of the current length matrix
+			# plt.imshow(self.matlengths)
 		else:
 			print("Cannot load matrix lengths")
 			print("Provide a valid file or call reset(..) before proceeding")
@@ -568,6 +579,10 @@ class ParcellationEdges(EdgeList):
 			self.matnumbers = 0.5*(self.matnumbers + np.matrix.transpose(self.matnumbers))
 			self.matlengths = 0.5*(self.matlengths + np.matrix.transpose(self.matlengths))
 			self.sym = True
+
+			# uncomment to see a visual of the symmetrized numbers and length matrices
+			# plt.imshow(self.matnumbers)
+			# plt.imshow(self.matlengths)
 		else:
 			print("Cannot symmetrize.  Please ensure that the network matrix")
 			print("and matrix lengths have been read and that this object has")
@@ -600,6 +615,11 @@ class ParcellationEdges(EdgeList):
 			# threshold the internal matrices by the connectivity mask
 			self.matnumbers = maskconn*self.matnumbers
 			self.matlengths = maskconn*self.matlengths
+
+			#uncomment to see a visual of the symmetrized and
+			# thresholded number and length matrices
+			# plt.imshow(self.matnumbers)
+			# plt.imshow(self.matlengths)
 		else:
 			if not self.fdtnetworkmatrix:
 				print("Please call readfibernumbers(..) first")
@@ -721,7 +741,7 @@ if __name__ == "__main__":
 	# Set singlesubject to false to create connectome files for multiple subjects whose
 	# files are all contained in directories located under a common root directory
 	# Example: [path]/subjects/subj-1/  [path]/subjects/subj-2/ and so on
-	singlesubject = False
+	singlesubject = True
 
 	# ==================== Parcellation Information ================================
 	# Set the directories that determine the nodes.  These files are determined by the parcellation
