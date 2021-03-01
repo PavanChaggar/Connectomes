@@ -5,8 +5,8 @@ import os
 
 # Split atlas into individual rois
 
-dirname  = '/home/fs0/exet5033/Connectomes/full_connectome'
-scale = 1
+dirname  = '/home/fs0/exet5033/Connectomes/standard_connectome'
+scale = 5
 filename = os.path.join(dirname,'parcellation/parcellation-files/sub-01_label-L2018_desc-scale%d_atlas.nii.gz' %scale)
 out_dir = os.path.join(dirname, 'scale%d/rois' %scale)
 atlas    = Image(filename)

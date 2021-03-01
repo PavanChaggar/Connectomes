@@ -1,10 +1,12 @@
 #!/bin/bash
 
 hcp_folder=/vols/Scratch/HCP
-out_folder=/home/fs0/exet5033/Connectomes/standardconnectome
+out_folder=/home/fs0/exet5033/Connectomes/standard_connectome/scale5
 filename=/vols/Scratch/HCP/Diffusion/Q1200/all_subjects
 
-rm -f command.txt
+rm -rf $out_folder/commands
+mkdir $out_folder/commands
+
 
 for ((i = 1 ; i < 51 ; i++)); do
 	subj=$(sed -n $i'p' $filename)
@@ -20,7 +22,7 @@ for ((i = 1 ; i < 51 ; i++)); do
     fi
 
     # create text file with list of seed masks
-    echo /home/fs0/exet5033/Connectomes/standardconnectome/rois/roi???.nii.gz > $out_folder/roilist
+    echo $out_folder/rois/roi???.nii.gz > $out_folder/roilist
     seeds=$out_folder/roilist
 
 
@@ -39,11 +41,11 @@ for ((i = 1 ; i < 51 ; i++)); do
     # run
 
     # On GPU
-    echo $FSLDIR/bin/probtrackx2_gpu $o >> command.txt
+    echo $FSLDIR/bin/probtrackx2_gpu $o >> $out_folder/commands/command.txt
 
     # On CPU
     #fsl_sub -q veryshort.q $FSLDIR/bin/probtrackx2 $o 
 
 done
 
-fsl_sub -q cuda.q -t command.txt
+#fsl_sub -q cuda.q -t $out_folder/commands/command.txt
