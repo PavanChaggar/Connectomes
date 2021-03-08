@@ -1,9 +1,9 @@
 # Standard Connectome
 
-This directory contains the connectomes generated using scale1 Lausanne atlas 
+This directory contains the connectomes generated using the standard Lausanne atlas 
 and HCP data.  
 
-To locate the individual subject data, navigate to `subjects`. 
+At present, connectomes at scales 1 and 5 have been processed and can be found in their respective directories. Within these directories, individual subject dat can be found in the subdirectory `subjects`. 
 
 Inside each of the subject directories, there exist: 
 * fdt_network_matrix
@@ -14,7 +14,7 @@ Inside each of the subject directories, there exist:
 * probtrackx.log
 * waytotal 
 
-Of particular importaance are fdt_network_matrix and fdt_network_matrix_lengths
+Of particular importance are fdt_network_matrix and fdt_network_matrix_lengths
 which each contain an adjacency matricies weighted by number of connections and 
 connection length, respectively. Their corresponding nifti images are provided 
 in compressed form. 
