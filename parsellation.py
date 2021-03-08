@@ -32,6 +32,29 @@ from os import walk
 import numpy as np
 import matplotlib.pyplot as plt
 
+# A simple progress bar
+def printProgressBar(iteration, total, prefix='', suffix='', decimals=1, length=100, fill='█', printEnd="\r"):
+	"""
+    Call in a loop to create terminal progress bar
+    @params:
+        iteration   - Required  : current iteration (Int)
+        total       - Required  : total iterations (Int)
+        prefix      - Optional  : prefix string (Str)
+        suffix      - Optional  : suffix string (Str)
+        decimals    - Optional  : positive number of decimals in percent complete (Int)
+        length      - Optional  : character length of bar (Int)
+        fill        - Optional  : bar fill character (Str)
+        printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
+    """
+	percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+	filledLength = int(length * iteration // total)
+	bar = fill * filledLength + '-' * (length - filledLength)
+	print('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix), end=printEnd)
+	# Print New Line on Complete
+	if iteration == total:
+		print()
+
+
 # ----------------------------------------------------------
 # implements a node that can generate its own xml tag
 # ----------------------------------------------------------
@@ -505,7 +528,15 @@ class ParcellationEdges(EdgeList):
 	# read the fiber numbers from a file. Pass in the fully qualified
 	# path to the file (e.g. the patient fdt_network_matrix
 	# file for a particular subject)
-	def readfibernumbers(self,pathto):
+	def readfibernumbers(self,pathto,masked=False,maskObj=None):
+
+		# construct a mask (which is all ones by default)
+		mask = np.ones((self.matsz,self.matsz))
+
+		if masked == True and type(maskObj) != None:
+			mask = (maskObj.getMask().tolist())
+
+
 		if not self.fdtnetworkmatrix and self.checkexist(pathto):
 			# fill in the fiber number matrix (connectivity) from the raw file
 
@@ -523,7 +554,7 @@ class ParcellationEdges(EdgeList):
 
 				for colndx in range(self.matsz):
 					# update the internal matrix
-					self.matnumbers[rowndx][colndx] = entries[colndx]
+					self.matnumbers[rowndx][colndx] = mask[rowndx][colndx]*entries[colndx]
 
 				line = f.readline()
 				rowndx += 1
@@ -541,7 +572,12 @@ class ParcellationEdges(EdgeList):
 	# read the lengths from a file. Pass in the fully qualified
 	# path to the file (e.g. the patient fdt_network_matrix_lengths
 	# file for a particular subject)
-	def readfiberlenghts(self,pathto):
+	def readfiberlenghts(self,pathto,masked=False,maskObj=None):
+		mask = np.ones((self.matsz,self.matsz))
+
+		if masked == True and type(maskObj) != None:
+			mask = (maskObj.getMask().tolist())
+
 		if not self.fdtnetworklengths and self.checkexist(pathto):
 			# fill in the fiber number lengths matrix from the raw file
 
@@ -559,7 +595,7 @@ class ParcellationEdges(EdgeList):
 
 				for colndx in range(self.matsz):
 					# update the internal matrix
-					self.matlengths[rowndx][colndx] = entries[colndx]
+					self.matlengths[rowndx][colndx] = mask[rowndx][colndx]*entries[colndx]
 
 				line = f.readline()
 				rowndx += 1
@@ -682,6 +718,100 @@ class ParcellationEdges(EdgeList):
 #----------------------------------------------------------
 #----------------------------------------------------------
 
+
+#----------------------------------------------------------
+# This class creates a frequency mask that can be applied
+# to a ParcellationEdges class.  This class assumes that
+# you have a directory containing (at least one) subdirectories
+# which correspond to individual subjects.  It is assumed that
+# each directory contains a CSV file satisfying:
+#    1. containing the patient connectivity matrix
+#    2. each such file has the same name
+# ---------------
+# The `makeMask' function creates a True/False matrix that reflects
+# whether or not an edge occurs in at least `0<percentage<=1' of the
+# patient subject directories in `fullpath'
+class groupMask():
+
+	# Construct with
+	#	1. The full path to the directory containing the subject subdirectories (path ending with /)
+	#	2. The name of the static file `fname' that contains the connectivity matrix in each subject directory
+	#	3. The number of vertices represented by the connectivity matrix
+	def __init__(self,fullpath,fname,nV):
+		self.reset(fullpath,fname,nV)
+
+	# private function that provides an iterator for the different mask building options
+	def __getpatientconnectivities(self,delimiter):
+		for rootdir, subjectdirs, files in walk(self.path):
+			totalsubj = len(subjectdirs)
+			thissubj = 0
+			for subj in subjectdirs:
+				thissubj +=1
+				subjectmatf = self.path + subj + "/" + self.fname
+				csv = np.genfromtxt(subjectmatf, delimiter=delimiter)
+				printProgressBar(thissubj, totalsubj, prefix='Creating group frequency mask:', suffix='Complete', length=50)
+
+
+				# pass back to the calling generator
+				# for further processing
+				yield csv
+
+	def makeFrequencyMask(self,freqPercentage,delimiter,medianFilter=False,averageFilter=False,filterPerc=1.0):
+			if medianFilter == averageFilter:
+				if medianFilter:
+					print("Only one of medianFilter or averageFilter should be True")
+					return
+				else:
+					print("Generating unfiltered frequency mask with occurence percentage {}%".format(freqPercentage*100))
+
+			numpatients = 0
+			for csvmat in self.__getpatientconnectivities(delimiter):
+
+				# increment the number of patients
+				numpatients += 1
+
+				#------------------------------
+				# walk the raw csv matrix and
+				# increment the mask accordingly
+
+				npcsv = np.array(csvmat)
+				filter = 0
+
+				if medianFilter:
+					filter = np.median(npcsv)
+				if averageFilter:
+					filter = np.average(npcsv)
+
+				for ndx, value in np.ndenumerate(npcsv):
+					if value > filter*filterPerc:
+						# record that the edge has passed
+						# in the aggregation matrix
+						self.tmat[ndx] += 1
+
+			# now we walk the internal mask matrix and determine whether or not
+			# to reset the entries to one or zero.  First, determine the number
+			# of times that an entry must be aggregated in order to stay
+			npat = int(freqPercentage*numpatients)
+
+			# now determine the mask
+			for ndx, value in np.ndenumerate(self.tmat):
+				if value > npat:
+					self.tmat[ndx] = 1.0
+				else:
+					self.tmat[ndx] = 0.0
+
+			plt.imshow(self.tmat.tolist())
+
+	def getMask(self):
+		return self.tmat
+
+	def reset(self,fullpath,fname,nV):
+		self.path 	= fullpath
+		self.fname 	= fname
+		self.nV 	= nV
+		self.tmat 	= np.zeros((self.nV, self.nV))
+
+
 # Outputs a graphml file.  Requires a fully-constructed
 # ParcellationNodes object (parcnodes) and ParcellationEdges
 # object (parcedges) in addition to a fully-qualified path
@@ -741,7 +871,41 @@ if __name__ == "__main__":
 	# Set singlesubject to false to create connectome files for multiple subjects whose
 	# files are all contained in directories located under a common root directory
 	# Example: [path]/subjects/subj-1/  [path]/subjects/subj-2/ and so on
-	singlesubject = True
+	singlesubject = False
+
+	# the scale of the connectome(s) to be processed.  This should be an integer from 1 to 5
+	scale = 1
+
+	# You should set this value to the number of vertices (Regions of interests ROIs) for the
+	# specific connectome parcellation (and scale) that you are working with.
+	# The ROIs are as follows:
+	# ---------
+	# Scale 1:
+	#....Standard - 83
+	#....Hippocampal subfields - 121
+	#....All subfields - 126
+	# --------
+	# Scale 2:
+	#....Standard - 129
+	#....Hippocampal subfields - 157
+	#....All subfields - 172
+	# ---------
+	# Scale 3:
+	#....Standard - 231
+	#....Hippocampal subfields - 259
+	#....All subfields - 274
+	# ---------
+	# Scale 4:
+	#....Standard - 461
+	#....Hippocampal subfields - 489
+	#....All subfields - 504
+	# ---------
+	# Scale 5:
+	#....Standard - 1017
+	#....Hippocampal subfields - 1045
+	#....All subfields - 1060
+	# ---------
+	nROI = 83
 
 	# ==================== Parcellation Information ================================
 	# Set the directories that determine the nodes.  These files are determined by the parcellation
@@ -752,15 +916,37 @@ if __name__ == "__main__":
 	# csvfile: the .csv file containing the coordinates for the parcellation.  This file can be created by running
 	#	get_coordinates.py on the raw parcellation files (see get_coordinates.py for details)
 	#	Example: [parcellationroot]/sub-01_label-L2018_desc-scale2_atlas_coordinates.csv
+
+	#----
+	# Standard connectome
 	parcellationroot = "/home/zcxp/Documents/repos/oxford/Connectomes/standard_connectome/parcellation/parcellation-files/"
 
-	tsvfile = parcellationroot + "sub-01_label-L2018_desc-scale1_stats.tsv"
-	csvfile = parcellationroot + "sub-01_label-L2018_desc-scale1_atlas_coordinates.csv"
+	# standard + hippocampal subfields connectome
+	#parcellationroot = "/home/zcxp/Documents/repos/oxford/Connectomes/hippsubfields_connectome/parcellation/parcellation-files/"
+
+	# standard + hippocampal + thalamic + brainstem subfields connectome
+	#parcellationroot = "/home/zcxp/Documents/repos/oxford/Connectomes/full_connectome/parcellation/parcellation-files/"
+	#----
+
+	tsvfile = parcellationroot + f"sub-01_label-L2018_desc-scale{scale}_stats.tsv"
+	csvfile = parcellationroot + f"sub-01_label-L2018_desc-scale{scale}_atlas_coordinates.csv"
+
 	# =========================================================================
 
 	# ==================== Subject Information ================================
 	# Specify the top-level directory that contains your subject file(s)
-	subjectroot = "/home/zcxp/Documents/repos/oxford/Connectomes/standard_connectome/scale1/subjects/"
+
+	#----
+	# Standard connectome
+	subjectroot = f"/home/zcxp/Documents/repos/oxford/Connectomes/standard_connectome/scale{scale}/subjects/"
+
+	# Standard connectome + hippocampal subfields connectome
+	# subjectroot = f"/home/zcxp/Documents/repos/oxford/Connectomes/hippsubfields_connectome/scale{scale}/subjects/"
+
+	# Standard + hippocampal + thalamic + brainstem subfields connectome
+	#subjectroot = f"/home/zcxp/Documents/repos/oxford/Connectomes/full_connectome/scale{scale}/subjects/"
+	#----
+
 
 	# if singlesubject == True: set this string to the name of the directory
 	# that contains the subject files you want to parse.  Example: subj-1/
@@ -776,6 +962,10 @@ if __name__ == "__main__":
 	fdtlengths = "fdt_network_matrix_lengths"
 	# =========================================================================
 
+	# ---- Debugging ----
+	# Uncomment to do a test read on a single subject matrix to make sure dimensions agree
+	#testm = np.genfromtxt(subjectroot + singlesubjectstr + fdtconnectivity,delimiter='  ')
+
 	# ==================== Output-related Information ================================
 	# Set the threshold you want to use.  This value should satisfy 0 < threshold <= 1.
 	# The thresholding algorithm  does the following
@@ -784,14 +974,41 @@ if __name__ == "__main__":
 	# 3. If C/Cmax < threshold: set the edge connectivity strength to zero
 	# This means that a lower values of (threshold) will set fewer edges to zero, while
 	# a higher value of (threshold) will set more edges to zero
-	threshold = 0.0079
+
+	# optimal (MND = 40) for standard connectome
+	# threshold = 0.0079
+
+	# optimal (MND = 40) for the hippocampal subfield connectome
+	# threshold = 0.0062
+
+	# optimal (MND=40) for the hippocampal + thalamic + brainstem subfield connectome
+	threshold = 0.0060
 
 	# Set the root directory for your desired output(s)
-	outputroot = "/home/zcxp/Documents/repos/oxford/Connectomes/standard_connectome/scale1/processed/"
+	#----
+	# Standard connectome
+	outputroot = f"/home/zcxp/Documents/repos/oxford/Connectomes/standard_connectome/scale{scale}/processed/"
+
+	# Standard connectome + hippocampal subfields
+	# outputroot = "/home/zcxp/Documents/repos/oxford/Connectomes/hippsubfields_connectome/scale1/processed/"
+
+	# Standard + hippocampal + thalamic + brainstem subfields connectome
+	#outputroot = "/home/zcxp/Documents/repos/oxford/Connectomes/full_connectome/scale1/processed/"
+	#----
+
+
+	# make a frequency mask based on a 50% frequency rate using average
+	# filtering at the patient level (e.g. patient edges are retained,
+	# for frequency matching, if their edge strength is 25% of average
+	# or more).  We can use this to threshold the patient matrices
+	# when reading in the individual files
+	mask = groupMask(subjectroot, fdtconnectivity, nROI)
+	#mask.makeFrequencyMask(0.5,'  ',averageFilter=True, filterPerc=0.25)
+	mask.makeFrequencyMask(0.99, '  ', medianFilter=True, filterPerc=1.0)
 
 	# specify a prefix for your output file.  The script will generate the appropriate
 	# suffix and extensions (e.g. scale1.graphml or scale1-connectivity.csv etc)
-	outputprefix = "scale1-standard-p0079"
+	outputprefix = f"scale{scale}-standard-average-50pfreq"
 	# =================================================================================
 
 	if len(sys.argv) != 1:
@@ -818,13 +1035,18 @@ if __name__ == "__main__":
 
 			# Create and populate the parcellation edges for the subject above
 			parcEdges = ParcellationEdges(parcNodes)
-			parcEdges.readfibernumbers(subjectroot + singlesubjectstr + fdtconnectivity)
-			parcEdges.readfiberlenghts(subjectroot + singlesubjectstr + fdtlengths)
+
+			# We can apply a mask to the individual matrices, when reading them in, if desired.
+			# For example, by using a groupMask() object.  The mask object must implement a function
+			# called getMask() which returns a numpy 2D array (of 1s and 0s) to apply. A 1 means keep
+			# and a 0 means discard
+			parcEdges.readfibernumbers(subjectroot + singlesubjectstr + fdtconnectivity, masked=True, maskObj=mask)
+			parcEdges.readfiberlenghts(subjectroot + singlesubjectstr + fdtlengths, masked=True, maskObj=mask)
 			parcEdges.symmetrize()
 
-			# set the desired thresholding and generate the edges from
-			# the thresholded matrices
-			parcEdges.thresholdbyconnectivity(threshold)
+			# Uncomment, below, to further threshold the matrices by percentage of maximal entry
+			# i.e. all edges such that edge/maxentry < threshold will be discarded
+			#parcEdges.thresholdbyconnectivity(threshold)
 			parcEdges.generateedges()
 
 			# the name(s) of the file(s) that will be generated for each subject
@@ -855,17 +1077,30 @@ if __name__ == "__main__":
 
 			# get the directory list in the subject root
 			for rootdir, subjectdirs, files in walk(subjectroot):
+				totalsubj = len(subjectdirs)
+				thissubj = 0
 				for subj in subjectdirs:
-					subjectstr = subj + "/"
+					thissubj += 1
 
+					printProgressBar(thissubj, totalsubj, prefix='Creating subject graphml connectomes:', suffix='Complete',length=50)
+					subjectstr = subj + "/"
 					graphmlfilename = outputprefix + "-" + subj + ".graphml"
 
 					# the file generation block
 					parcEdges.reset()
-					parcEdges.readfibernumbers(subjectroot + subjectstr + fdtconnectivity)
-					parcEdges.readfiberlenghts(subjectroot + subjectstr + fdtlengths)
+
+					# We can apply a mask to the individual matrices, when reading them in, if desired.
+					# For example, by using a groupMask() object.  The mask object must implement a function
+					# called getMask() which returns a numpy 2D array (of 1s and 0s) to apply. A 1 means keep
+					# and a 0 means discard
+					parcEdges.readfibernumbers(subjectroot + subjectstr + fdtconnectivity, masked=True, maskObj=mask)
+					parcEdges.readfiberlenghts(subjectroot + subjectstr + fdtlengths, masked=True, maskObj=mask)
 					parcEdges.symmetrize()
-					parcEdges.thresholdbyconnectivity(threshold)
+
+					# Uncomment, below, to further threshold the matrices by percentage of maximal entry
+					# i.e. all edges such that edge/maxentry < threshold will be discarded
+					#parcEdges.thresholdbyconnectivity(threshold)
+
 					parcEdges.generateedges()
 
 					# output the files for this subject
