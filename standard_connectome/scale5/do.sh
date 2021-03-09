@@ -22,7 +22,7 @@ for ((i = 1 ; i < 51 ; i++)); do
     fi
 
     # create text file with list of seed masks
-    echo $out_folder/rois/roi???.nii.gz > $out_folder/roilist
+    echo $out_folder/rois/roi????.nii.gz > $out_folder/roilist
     seeds=$out_folder/roilist
 
 
@@ -48,4 +48,4 @@ for ((i = 1 ; i < 51 ; i++)); do
 
 done
 
-fsl_sub -q cuda.q -t $out_folder/commands/command.txt
+#fsl_sub -q cuda.q -t $out_folder/commands/command.txt
