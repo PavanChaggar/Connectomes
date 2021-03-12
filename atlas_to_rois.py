@@ -25,5 +25,5 @@ for i in np.unique(atlas.data):
         img = Image(x,xform=atlas.voxToWorldMat)
         data,xform = resample.resampleToReference(img,ref,order=0)
         img = Image(data,xform=xform)
-        img.save(os.path.join(out_dir,f'roi{int(i):03d}.nii.gz'))
+        img.save(os.path.join(out_dir,f'roi{int(i):04d}.nii.gz'))
         

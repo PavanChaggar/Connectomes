@@ -4,11 +4,11 @@ hcp_folder=/vols/Scratch/HCP
 out_folder=/home/fs0/exet5033/Connectomes/standard_connectome/scale1
 filename=/vols/Scratch/HCP/Diffusion/Q1200/all_subjects
 
-rm $out_folder/commands/command.txt
+#rm $out_folder/commands/command.txt
 #mkdir $out_folder/commands
 
 
-for ((i = 51 ; i < 101 ; i++)); do
+for ((i = 101 ; i < 201 ; i++)); do
 	subj=$(sed -n $i'p' $filename)
 
     #100307  119025  137431  155635  175136  195445  214019  341834  486759  599671  744553  878877
