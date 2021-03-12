@@ -1,12 +1,14 @@
 #!/bin/bash
 
 hcp_folder=/vols/Scratch/HCP
-out_folder=/home/fs0/exet5033/Connectomes/hippsubfields_connectome
+out_folder=/home/fs0/exet5033/Connectomes/hippsubfields_connectome/scale1
 filename=/vols/Scratch/HCP/Diffusion/Q1200/all_subjects
 
-rm -f command.txt
+#rm $out_folder/commands/command.txt
+#mkdir $out_folder/commands
 
-for ((i = 1 ; i < 51 ; i++)); do
+
+for ((i = 51 ; i < 101 ; i++)); do
 	subj=$(sed -n $i'p' $filename)
 
     #100307  119025  137431  155635  175136  195445  214019  341834  486759  599671  744553  878877
@@ -39,11 +41,11 @@ for ((i = 1 ; i < 51 ; i++)); do
     # run
 
     # On GPU
-    echo $FSLDIR/bin/probtrackx2_gpu $o >> command.txt
+    echo $FSLDIR/bin/probtrackx2_gpu $o >> $out_folder/commands/command.txt
 
     # On CPU
     #fsl_sub -q veryshort.q $FSLDIR/bin/probtrackx2 $o 
 
 done
 
-fsl_sub -q cuda.q -t command.txt
+#fsl_sub -q cuda.q -t $out_folder/commands/command.txt
