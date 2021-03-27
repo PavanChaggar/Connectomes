@@ -1,4 +1,5 @@
 import os
+import shutil
 import pandas
 import numpy as np
 from scipy import stats
@@ -155,6 +156,9 @@ def writeDataframeStats(df,dir):
 # ----------------------------------------------------------------
 #               Begin reformatting procedure
 # ----------------------------------------------------------------
+
+if os.path.exists(relative_output_root):
+    shutil.rmtree(relative_output_root)
 
 mkoutdirs(relative_output_root)
 
