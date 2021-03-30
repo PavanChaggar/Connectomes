@@ -104,7 +104,7 @@ def test_densities(table, start, end, step):
       yield (s, nodes, (100.0 * nodes) / onodes, edges, (100.0 * edges) / oedges, avgdeg, avgdeg / oavgdeg)
 
 def noise_corrected(table, undirected = False, return_self_loops = False, calculate_p_value = False):
-   sys.stderr.write("Calculating NC score...\n")
+   #sys.stderr.write("Calculating NC score...\n")
    table = table.copy()
    src_sum = table.groupby(by = "src").sum()[["nij"]]
    table = table.merge(src_sum, left_on = "src", right_index = True, suffixes = ("", "_src_sum"))
@@ -135,7 +135,7 @@ def noise_corrected(table, undirected = False, return_self_loops = False, calcul
    return table[["src", "trg", "nij", "score", "sdev_cij"]]
 
 def doubly_stochastic(table, undirected = False, return_self_loops = False):
-   sys.stderr.write("Calculating DST score...\n")
+   #sys.stderr.write("Calculating DST score...\n")
    table = table.copy()
    table2 = table.copy()
    original_nodes = len(set(table["src"]) | set(table["trg"]))
@@ -179,7 +179,7 @@ def doubly_stochastic(table, undirected = False, return_self_loops = False):
    return table[["src", "trg", "nij", "score"]]
 
 def disparity_filter(table, undirected = False, return_self_loops = False):
-   sys.stderr.write("Calculating DF score...\n")
+   #sys.stderr.write("Calculating DF score...\n")
    table = table.copy()
    table_sum = table.groupby(table["src"]).sum().reset_index()
    table_deg = table.groupby(table["src"]).count()["trg"].reset_index()
@@ -202,7 +202,7 @@ def disparity_filter(table, undirected = False, return_self_loops = False):
    return table[["src", "trg", "nij", "score", "variance"]]
 
 def high_salience_skeleton(table, undirected = False, return_self_loops = False):
-   sys.stderr.write("Calculating HSS score...\n")
+   #sys.stderr.write("Calculating HSS score...\n")
    table = table.copy()
    table["distance"] = 1.0 / table["nij"]
    nodes = set(table["src"]) | set(table["trg"])
@@ -247,7 +247,7 @@ def high_salience_skeleton(table, undirected = False, return_self_loops = False)
    return table[["src", "trg", "nij", "score"]]
 
 def naive(table, undirected = False, return_self_loops = False):
-   sys.stderr.write("Calculating Naive score...\n")
+   #sys.stderr.write("Calculating Naive score...\n")
    table = table.copy()
    table["score"] = table["nij"]
    if not return_self_loops:
@@ -263,7 +263,7 @@ def naive(table, undirected = False, return_self_loops = False):
    return table[["src", "trg", "nij", "score"]]
 
 def maximum_spanning_tree(table, undirected = False):
-   sys.stderr.write("Calculating MST score...\n")
+   #sys.stderr.write("Calculating MST score...\n")
    table = table.copy()
    table["distance"] = 1.0 / table["nij"]
    G = nx.from_pandas_edgelist(table, source = "src", target = "trg", edge_attr = ["distance", "nij"])

@@ -1,4 +1,5 @@
 import os
+import sys
 import pandas
 import numpy as np
 import shutil
@@ -7,7 +8,7 @@ import matplotlib.pyplot as plt
 
 # Copyright Michele Cosica
 # https://www.michelecoscia.com/?page_id=287
-import backboning
+from thresholding import backboning
 
 from scipy import stats
 
@@ -162,7 +163,7 @@ def generateCosicaThresholds(dir,fname):
 
 
 	#====================================================================================
-	#                               Naive method thresholding
+	#                             Naive method thresholding
 	#====================================================================================
 	# Here we simply compute a score as entry/max_entry and keep everything above a certain
 	# threshold (using Cosica's same threshold function)
@@ -188,12 +189,12 @@ def generateCosicaThresholds(dir,fname):
 
 	#====================================================================================
 	#                           Methods for noise-free edge weights
-	#							     but noisy structure
+	#                                 but noisy structure
 	#====================================================================================
 
 	#------------------------------------------------------------------------------------
-	#							      Doubly Stochastic
-	#						https://www.pnas.org/content/106/26/E66
+	#                                Doubly Stochastic
+	#                       https://www.pnas.org/content/106/26/E66
 	#------------------------------------------------------------------------------------
 	# From the short letter, it appears that this is an iterative approach to Serano's
 	# disparity filter (which is computed below).  Thus, the score (for thresholding) here
@@ -223,8 +224,8 @@ def generateCosicaThresholds(dir,fname):
 
 
 	#------------------------------------------------------------------------------------
-	#							     High-Salience Skeleton
-	#						https://www.nature.com/articles/ncomms1847
+	#                           High-Salience Skeleton
+	#                  https://www.nature.com/articles/ncomms1847
 	#------------------------------------------------------------------------------------
 	# The high-salience skeleton computes a score (called the salience) for each link based
 	# on examining the shortest paths between nodes computed using the reciprocal of the
@@ -259,6 +260,11 @@ def generateCosicaThresholds(dir,fname):
 		method = f"{fdtconnectivity}-HSS-{S}"
 		backboning.write(hssbackbone,"nij", method, folder)
 
+
+	#====================================================================================
+	#                           Methods for noisy edge weights
+	#                               with noisy structure
+	#====================================================================================
 
 	#------------------------------------------------------------------------------------
 	#                           Noise Corrected Thresholding
@@ -330,9 +336,8 @@ def generateCosicaThresholds(dir,fname):
 # and output them to the
 def convertCosicaToFSL():
 
-	#---------------------------
+	#------ Begin internal function definition --------
 	def processSubject(subj):
-
 		# remove the finished results directory for this subject if
 		# it exists -- we will create a fresh one
 
@@ -427,7 +432,7 @@ def convertCosicaToFSL():
 						# save the thresholded matrix in the format
 						# that FSL expects to read in
 						np.savetxt(fixpath(outputDir) + fdtconnectivity, fslmat, delimiter='  ')
-	#---------------------------
+	#------ End internal function definition --------
 
 	if os.path.exists(relative_finished_results_root):
 		shutil.rmtree(relative_finished_results_root)
@@ -441,14 +446,24 @@ def convertCosicaToFSL():
 	totalsubjs = len(allsubjects)
 	for subj in allsubjects:
 		thissubj += 1
+		print("Writing FSL matrix for subject: " + subj)
 		printProgressBar(thissubj, totalsubjs, prefix='Writing subject FSL matrices:', suffix='Complete', length=100)
 		processSubject(subj)
+#-----------------------------------------------------------------
+
+
 
 # ----------------------------------------------------------------
+#            Begin thresholding and reformatting process
+# ----------------------------------------------------------------
+
 
 if not os.path.exists(relative_cosica_subject_root):
 	print("The relative (to this script) directory {} does not exist".format(relative_cosica_subject_root))
 	print("If you need to generate reformatted subject files, please configure and run 1-FSL-to-Cosica.py")
+	sys.exit()
+
+# clear any
 
 dirlevel = 0
 for rootdir, subjectdirs, files in os.walk(relative_cosica_subject_root):
@@ -462,9 +477,16 @@ for rootdir, subjectdirs, files in os.walk(relative_cosica_subject_root):
 	if dirlevel == 1:
 		for subj in subjectdirs:
 			thissubj+=1
+			print("Processing thresholds for subject: " + subj)
 			printProgressBar(thissubj, totalsubj, prefix='Processing subject thresholds:', suffix='Complete', length=100)
 			subjdir = os.path.join(relative_cosica_subject_root, subj)
 			generateCosicaThresholds(subjdir, cosicaInput)
 
 
+# Convert the Cosica-formatted files to the native FSL format
+# and save the
 convertCosicaToFSL()
+
+# We have reformatted the Cosica formatted files to the FSL strcutre.
+# We can now get rid of the cosica files
+shutil.rmtree(relative_cosica_subject_root)
