@@ -8,7 +8,7 @@ filename=/vols/Scratch/HCP/Diffusion/Q1200/all_subjects
 #mkdir $out_folder/commands
 
 
-for ((i = 101 ; i < 201 ; i++)); do
+for ((i = 170 ; i < 171 ; i++)); do
 	subj=$(sed -n $i'p' $filename)
 
     #100307  119025  137431  155635  175136  195445  214019  341834  486759  599671  744553  878877
