@@ -39,6 +39,13 @@ from thresholding import parsing
 #-----------------------------------------------------------
 #                   Directory structure
 #-----------------------------------------------------------
+
+# -..-..-..-..-..-
+# [Modify] > The relative directory (to this script) where you have stored
+#          > the FSL connectome connectivity matrix data to be processed by this script
+parcellationScale = 1
+connectome = "standard_connectome"
+
 #	[Do not modify]
 #    > The directory of the current script
 scriptdir = os.path.dirname(__file__)
@@ -50,16 +57,13 @@ scriptdir = os.path.dirname(__file__)
 #           > script 2-Cosica-Threholded-to-FSL
 relative_thresholded_fslsubjectroot = "fslformatted/"
 
-# -..-..-..-..-..-
-# [Modify] > The relative directory (to this script) where you have stored
-#          > the FSL connectome connectivity matrix data to be processed by this script
-parcellationScale = 1
-connectome = "standard_connectome"
 
+# -..-..-..-..-..-
+# [No need to modify if running from within the repository structure]
 #   > path to the raw fsl parcellation files for this connectome
-relative_raw_parcellationroot = f"../../../../Documents/repos/oxford/Connectomes/{connectome}/parcellation/parcellation-files/"
+relative_raw_parcellationroot = f"../{connectome}/parcellation/parcellation-files/"
 #   > path to the raw FSL subject directory (un-thresholded)
-relative_raw_fslsubjectroot = f"../../../../Documents/repos/oxford/Connectomes/{connectome}/scale{parcellationScale}/subjects/"
+relative_raw_fslsubjectroot = f"../{connectome}/scale{parcellationScale}/subjects/"
 
 # -..-..-..-.-..-
 # [Modify]  > The final (relative path) to the output directory for the finished (graphml) patient data file set

@@ -35,13 +35,18 @@ from scipy import stats
 # ---------------------------------------------------------
 # This script reformats a standard FSL output connectivity matrix into the form required
 # by Prof. Michele Coscia's network backboning toolbox (https://www.michelecoscia.com/?page_id=287)
-#
+
+
+# ----- Connectome and scale
+parcellationScale = 5
+connectome = "standard_connectome"
+
 # ----- Directory structure -----
 #    > The directory of the current script
 scriptdir = os.path.dirname(__file__)
 # [Modify] > The relative directory (to this script) where you have stored
 #          > the FSL connectome connectivity matrix data to be processed by this script
-relative_subjectroot = "../../../../Documents/repos/oxford/Connectomes/standard_connectome/scale1/subjects/"
+relative_subjectroot = f"../{connectome}/scale{parcellationScale}/subjects/"
 
 #          > Create the subject root directory
 subjectroot = os.path.join(scriptdir, relative_subjectroot)
