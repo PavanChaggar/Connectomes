@@ -556,8 +556,8 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=nThreads) as executor:
 # ---------------------------
 # Convert the Cosica-formatted files to the native FSL format
 # and save the
-#convertCosicaToFSL()
+convertCosicaToFSL()
 
 # We have reformatted the Cosica formatted files to the FSL strcutre.
 # We can now get rid of the cosica files
-#shutil.rmtree(relative_cosica_subject_root)
+shutil.rmtree(relative_cosica_subject_root)
