@@ -873,9 +873,18 @@ if __name__ == "__main__":
 	# Example: [path]/subjects/subj-1/  [path]/subjects/subj-2/ and so on
 	singlesubject = False
 
-	# the scale of the connectome(s) to be processed.  This should be an integer from 1 to 5
-	scale = 1
 
+	#----------------------------------------------------------------------------------------------------------
+	# Connectome information
+	#----------------------------------------------------------------------------------------------------------
+	# --> connectome: one of "standard_connectome", "hippsubfields_connectome" or "full_connectome"
+	connectome = "standard_connectome"
+
+	# --> the scale of the connectome(s) to be processed.  This should be an integer from 1 to 5
+	scale = 5
+
+	# --> nRoi
+	# now we need to specify the number of ROIs in the connectome
 	# You should set this value to the number of vertices (Regions of interests ROIs) for the
 	# specific connectome parcellation (and scale) that you are working with.
 	# The ROIs are as follows:
@@ -905,7 +914,8 @@ if __name__ == "__main__":
 	#....Hippocampal subfields - 1045
 	#....All subfields - 1060
 	# ---------
-	nROI = 83
+	nROI = 1017
+	#------------------------------------------------------------------------------------------------------
 
 	# ==================== Parcellation Information ================================
 	# Set the directories that determine the nodes.  These files are determined by the parcellation
@@ -917,15 +927,10 @@ if __name__ == "__main__":
 	#	get_coordinates.py on the raw parcellation files (see get_coordinates.py for details)
 	#	Example: [parcellationroot]/sub-01_label-L2018_desc-scale2_atlas_coordinates.csv
 
+
 	#----
-	# Standard connectome
-	parcellationroot = "/home/zcxp/Documents/repos/oxford/Connectomes/standard_connectome/parcellation/parcellation-files/"
-
-	# standard + hippocampal subfields connectome
-	#parcellationroot = "/home/zcxp/Documents/repos/oxford/Connectomes/hippsubfields_connectome/parcellation/parcellation-files/"
-
-	# standard + hippocampal + thalamic + brainstem subfields connectome
-	#parcellationroot = "/home/zcxp/Documents/repos/oxford/Connectomes/full_connectome/parcellation/parcellation-files/"
+	# root directory of the parcellation
+	parcellationroot = f"./{connectome}/parcellation/parcellation-files/"
 	#----
 
 	tsvfile = parcellationroot + f"sub-01_label-L2018_desc-scale{scale}_stats.tsv"
@@ -935,16 +940,7 @@ if __name__ == "__main__":
 
 	# ==================== Subject Information ================================
 	# Specify the top-level directory that contains your subject file(s)
-
-	#----
-	# Standard connectome
-	subjectroot = f"/home/zcxp/Documents/repos/oxford/Connectomes/standard_connectome/scale{scale}/subjects/"
-
-	# Standard connectome + hippocampal subfields connectome
-	# subjectroot = f"/home/zcxp/Documents/repos/oxford/Connectomes/hippsubfields_connectome/scale{scale}/subjects/"
-
-	# Standard + hippocampal + thalamic + brainstem subfields connectome
-	#subjectroot = f"/home/zcxp/Documents/repos/oxford/Connectomes/full_connectome/scale{scale}/subjects/"
+	subjectroot = f"./{connectome}/scale{scale}/subjects/"
 	#----
 
 
@@ -986,29 +982,33 @@ if __name__ == "__main__":
 
 	# Set the root directory for your desired output(s)
 	#----
-	# Standard connectome
-	outputroot = f"/home/zcxp/Documents/repos/oxford/Connectomes/standard_connectome/scale{scale}/processed/"
-
-	# Standard connectome + hippocampal subfields
-	# outputroot = "/home/zcxp/Documents/repos/oxford/Connectomes/hippsubfields_connectome/scale1/processed/"
-
-	# Standard + hippocampal + thalamic + brainstem subfields connectome
-	#outputroot = "/home/zcxp/Documents/repos/oxford/Connectomes/full_connectome/scale1/processed/"
+	outputroot = f"./{connectome}/scale{scale}/processed/"
 	#----
 
 
+	#------------------------------------------------------------------
+	#             Optional: Make a frequency mask
+	#         to filter subject edges by frequency in
+	#                  the overall dataset
 	# make a frequency mask based on a 50% frequency rate using average
 	# filtering at the patient level (e.g. patient edges are retained,
 	# for frequency matching, if their edge strength is 25% of average
 	# or more).  We can use this to threshold the patient matrices
 	# when reading in the individual files
-	mask = groupMask(subjectroot, fdtconnectivity, nROI)
-	#mask.makeFrequencyMask(0.5,'  ',averageFilter=True, filterPerc=0.25)
-	mask.makeFrequencyMask(0.99, '  ', medianFilter=True, filterPerc=1.0)
+	#
+	# Option 1 ---> Use a frequency mask
+	# useFreqMask=True
+	# mask = groupMask(subjectroot, fdtconnectivity, nROI)
+	# mask.makeFrequencyMask(0.99, '  ', medianFilter=True, filterPerc=1.0)
+	#
+	# Option 2 ---> Do not use a frequency mask
+	useFreqMask=False
+	mask = None
+	#--------------------------------------------------------------------
 
 	# specify a prefix for your output file.  The script will generate the appropriate
 	# suffix and extensions (e.g. scale1.graphml or scale1-connectivity.csv etc)
-	outputprefix = f"scale{scale}-standard-average-50pfreq"
+	outputprefix = f"scale{scale}-standard-average"
 	# =================================================================================
 
 	if len(sys.argv) != 1:
@@ -1040,8 +1040,9 @@ if __name__ == "__main__":
 			# For example, by using a groupMask() object.  The mask object must implement a function
 			# called getMask() which returns a numpy 2D array (of 1s and 0s) to apply. A 1 means keep
 			# and a 0 means discard
-			parcEdges.readfibernumbers(subjectroot + singlesubjectstr + fdtconnectivity, masked=True, maskObj=mask)
-			parcEdges.readfiberlenghts(subjectroot + singlesubjectstr + fdtlengths, masked=True, maskObj=mask)
+
+			parcEdges.readfibernumbers(subjectroot + singlesubjectstr + fdtconnectivity, masked=useFreqMask, maskObj=mask)
+			parcEdges.readfiberlenghts(subjectroot + singlesubjectstr + fdtlengths, masked=useFreqMask, maskObj=mask)
 			parcEdges.symmetrize()
 
 			# Uncomment, below, to further threshold the matrices by percentage of maximal entry
@@ -1093,14 +1094,13 @@ if __name__ == "__main__":
 					# For example, by using a groupMask() object.  The mask object must implement a function
 					# called getMask() which returns a numpy 2D array (of 1s and 0s) to apply. A 1 means keep
 					# and a 0 means discard
-					parcEdges.readfibernumbers(subjectroot + subjectstr + fdtconnectivity, masked=True, maskObj=mask)
-					parcEdges.readfiberlenghts(subjectroot + subjectstr + fdtlengths, masked=True, maskObj=mask)
+					parcEdges.readfibernumbers(subjectroot + subjectstr + fdtconnectivity, masked=useFreqMask, maskObj=mask)
+					parcEdges.readfiberlenghts(subjectroot + subjectstr + fdtlengths, masked=useFreqMask, maskObj=mask)
 					parcEdges.symmetrize()
 
 					# Uncomment, below, to further threshold the matrices by percentage of maximal entry
 					# i.e. all edges such that edge/maxentry < threshold will be discarded
 					#parcEdges.thresholdbyconnectivity(threshold)
-
 					parcEdges.generateedges()
 
 					# output the files for this subject
