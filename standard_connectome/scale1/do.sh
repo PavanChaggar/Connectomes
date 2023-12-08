@@ -17,6 +17,8 @@ for ((i = 170 ; i < 171 ; i++)); do
 
 
     # step 0 : turn parcellation to individual rois
+    # Need to run python script to generate nifti files for each roi.
+
     if [ "$do_split" == True  ];then
         python3 atlas_to_rois.py
     fi
@@ -27,6 +29,7 @@ for ((i = 170 ; i < 171 ; i++)); do
 
 
     # step 1 : run probtrackx
+    # main input files needed to run probtrackx
     bpxdir=$hcp_folder/Diffusion/Q1200/$subj/T1w/Diffusion.bedpostX
     xfm=$hcp_folder/Structural/Q1200/$subj/MNINonLinear/xfms/standard2acpc_dc.nii.gz
     invxfm=$hcp_folder/Structural/Q1200/$subj/MNINonLinear/xfms/acpc_dc2standard.nii.gz
