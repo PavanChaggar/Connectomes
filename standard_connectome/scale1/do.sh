@@ -1,8 +1,8 @@
 #!/bin/bash
 
-hcp_folder=/vols/Scratch/HCP
-out_folder=/home/fs0/exet5033/Connectomes/standard_connectome/scale1
-filename=/vols/Scratch/HCP/Diffusion/Q1200/all_subjects
+hcp_folder=/vols/Scratch/HCP # dir containing all the subjects and bedpostx 
+out_folder=/home/fs0/exet5033/Connectomes/standard_connectome/scale1 # dir to save output
+filename=/vols/Scratch/HCP/Diffusion/Q1200/all_subjects # .csv file pointing to subject ID numbers, e.g. 100307
 
 #rm $out_folder/commands/command.txt
 #mkdir $out_folder/commands
